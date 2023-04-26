@@ -15,8 +15,8 @@ async function bootBotCall() {
 		getVarsFromObject(process.env, ['API_HASH', 'API_ID', 'BOT_TOKEN']) as GramProps,
 	);
 
-	client.addEventHandler(handlerNewMessage, new NewMessage());
-	client.addEventHandler(handlerEditMessage, new EditedMessage({}));
+	client.addEventHandler(async ev => handlerNewMessage(ev, client), new NewMessage({}));
+	client.addEventHandler(async ev => handlerEditMessage(ev, client), new EditedMessage({}));
 	await client.launch({
 		onError(err) {
 			console.log('Error: ', err.message);
