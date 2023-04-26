@@ -9,6 +9,7 @@ import {StringSession} from 'telegram/sessions/StringSession.js';
 export class TelegramFramework extends TelegramClient {
 	public messages = new QuickLRU<string, MessageOnCache>({
 		maxSize: 512,
+		maxAge: (60 * 1_000) * 5,
 	});
 
 	/**
