@@ -15,7 +15,8 @@
             "@utilities/*": ["src/Utilities/*"],
             "@boot/*": ["src/Bootstrap/*"],
             "@frameworks/*": ["src/Frameworks/*"],
-            "@handlers/*": ["src/Handlers/*"]
+            "@handlers/*": ["src/Handlers/*"],
+            "@structures/*": ["src/Structures/*"]
         },
         "moduleResolution": "nodenext"
     },

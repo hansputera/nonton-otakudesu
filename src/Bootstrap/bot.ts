@@ -3,9 +3,12 @@ import {getVarsFromObject} from '@utilities/object.js';
 
 import {TelegramFramework} from '@frameworks/GramJs.js';
 import {type GramProps} from '@typings/frameworks.gramjs.js';
+
 import {handlerNewMessage} from '@handlers/new.message.js';
+import {handlerEditMessage} from '@handlers/edited.message.js';
 
 import {NewMessage} from 'telegram/events/NewMessage.js';
+import {EditedMessage} from 'telegram/events/EditedMessage.js';
 
 async function bootBotCall() {
 	const client = new TelegramFramework(
@@ -13,6 +16,7 @@ async function bootBotCall() {
 	);
 
 	client.addEventHandler(handlerNewMessage, new NewMessage());
+	client.addEventHandler(handlerEditMessage, new EditedMessage({}));
 	await client.launch({
 		onError(err) {
 			console.log('Error: ', err.message);
