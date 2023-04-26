@@ -1,9 +1,16 @@
 import {type GramProps} from '@typings/frameworks.gramjs.js';
+import {type MessageOnCache} from '@typings/message.js';
+import QuickLRU from 'quick-lru';
+
 import {TelegramClient} from 'telegram';
 import {type UserAuthParams} from 'telegram/client/auth.js';
 import {StringSession} from 'telegram/sessions/StringSession.js';
 
 export class TelegramFramework extends TelegramClient {
+	public messages = new QuickLRU<string, MessageOnCache>({
+		maxSize: 512,
+	});
+
 	/**
      * @param props TelegramFramework init props
      */
