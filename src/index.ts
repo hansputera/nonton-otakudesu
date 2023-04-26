@@ -1,3 +1,3 @@
-import 'dotenv/config';
+import '@boot/env.js';
 
 console.log('Hello World!');

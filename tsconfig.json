@@ -3,13 +3,19 @@
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "target": "ESNext",
-        "module": "CommonJS",
+        "module": "ESNext",
         "strictNullChecks": true,
         "noImplicitAny": true,
         "skipLibCheck": true,
         "outDir": "dist",
         "baseUrl": ".",
-        "noImplicitReturns": true
+        "noImplicitReturns": true,
+        "paths": {
+            "@typings/*": ["src/Typings/*"],
+            "@utilities/*": ["src/Utilities/*"],
+            "@boot/*": ["src/Bootstrap/*"]
+        },
+        "moduleResolution": "nodenext"
     },
     "exclude": ["node_modules", "dist"],
     "include": ["src/**/*"]
