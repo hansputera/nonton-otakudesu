@@ -13,7 +13,9 @@
         "paths": {
             "@typings/*": ["src/Typings/*"],
             "@utilities/*": ["src/Utilities/*"],
-            "@boot/*": ["src/Bootstrap/*"]
+            "@boot/*": ["src/Bootstrap/*"],
+            "@frameworks/*": ["src/Frameworks/*"],
+            "@handlers/*": ["src/Handlers/*"]
         },
         "moduleResolution": "nodenext"
     },
