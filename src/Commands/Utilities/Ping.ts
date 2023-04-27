@@ -17,4 +17,5 @@ export default registerCommand(PingCommand, {
 	flags: [],
 	args: [],
 	category: 'utilities',
+	editable: true,
 });

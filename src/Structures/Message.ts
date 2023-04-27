@@ -25,6 +25,10 @@ export class MessageEvent {
 		const oldRepliedMessage = this.cached;
 
 		if (oldRepliedMessage) {
+			if (this.command && !this.command.props.editable) {
+				return;
+			}
+
 			await this.$client.editMessage(oldRepliedMessage.chat, {
 				message: parseInt(oldRepliedMessage.lastResponseMessageId, 10),
 				text,
