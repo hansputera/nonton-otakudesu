@@ -51,4 +51,5 @@ export default registerCommand(SearchCommand, {
 		required: true,
 		type: 'text',
 	},
+	editable: true,
 });
