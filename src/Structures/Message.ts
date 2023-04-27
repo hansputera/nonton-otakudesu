@@ -23,6 +23,12 @@ export class MessageEvent {
 			.slice(1).replace(/@.+/g, '');
 	}
 
+	public getArgOption(key: string): string | undefined {
+		const flag = this.flags.find(f => f.startsWith('--' + key));
+
+		return flag?.replace(/--[a-zA-Z0-9_]+(:|=)/g, '');
+	}
+
 	public async reply(text: string, params?: SendMessageParams | EditMessageParams): Promise<void> {
 		if (this.$ev instanceof DeletedMessageEvent) {
 			return;
@@ -68,6 +74,14 @@ export class MessageEvent {
 		return this.$ev.message.message;
 	}
 
+	get args(): string[] {
+		return this._args.filter(x => !x.startsWith('--'));
+	}
+
+	get flags(): string[] {
+		return this._args.filter(x => x.startsWith('--'));
+	}
+
 	get cached(): MessageOnCache | undefined {
 		return this.$client.messages.get(
 			this.$ev instanceof DeletedMessageEvent ? this.$ev.deletedIds[0].toString()
@@ -90,6 +104,15 @@ export class MessageEvent {
 		}
 
 		return this.$ev.message.entities;
+	}
+
+	protected get _args(): string[] {
+		const cmdName = this.getCommandName();
+		if (!cmdName) {
+			return [];
+		}
+
+		return this.text.split(/\s+/g).slice(1);
 	}
 
 	async _process(): Promise<void> {

@@ -18,6 +18,7 @@
             "@handlers/*": ["src/Handlers/*"],
             "@structures/*": ["src/Structures/*"],
             "@commands/*": ["src/Commands/*"],
+            "@exceptions/*": ["src/Exceptions/*"]
         },
         "moduleResolution": "nodenext"
     },
