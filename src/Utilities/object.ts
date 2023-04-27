@@ -46,6 +46,7 @@ export const registerCommand: RegisterCommandFn = (Instance, props) => {
 		),
 		flags: ow.array.ofType(ow.string),
 		category: ow.string,
+		editable: ow.optional.boolean,
 	}));
 	const ins = new Instance(props);
 
