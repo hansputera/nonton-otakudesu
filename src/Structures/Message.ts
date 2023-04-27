@@ -21,6 +21,27 @@ export class MessageEvent {
 			.slice(1);
 	}
 
+	public async reply(text: string): Promise<void> {
+		const oldRepliedMessage = this.cached;
+
+		if (oldRepliedMessage) {
+			await this.$client.editMessage(oldRepliedMessage.chat, {
+				message: parseInt(oldRepliedMessage.lastResponseMessageId, 10),
+				text,
+			});
+		} else {
+			const message = await this.$client.sendMessage(this.$ev.chat!, {
+				message: text,
+				replyTo: this.$ev.message.id,
+			});
+
+			this.$client.messages.set(this.$ev.message.id.toString(), {
+				chat: message.chat!,
+				lastResponseMessageId: message.id.toString(),
+			});
+		}
+	}
+
 	get text(): string {
 		return this.$ev.message.message;
 	}
