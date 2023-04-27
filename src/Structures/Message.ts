@@ -16,7 +16,8 @@ export class MessageEvent {
 			return undefined;
 		}
 
-		return this.text.substring(command.offset, command.length);
+		return this.text.substring(command.offset, command.length)
+			.slice(1);
 	}
 
 	get text(): string {
