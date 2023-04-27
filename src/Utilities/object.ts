@@ -35,16 +35,16 @@ export const registerCommand: RegisterCommandFn = (Instance, props) => {
 	ow(props, ow.object.exactShape({
 		name: ow.string.not.empty,
 		description: ow.string.not.empty.minLength(10),
-		aliases: ow.array.exactShape([ow.string.not.empty]),
-		args: ow.array.exactShape([
+		aliases: ow.array.ofType(ow.string),
+		args: ow.array.ofType(
 			ow.object.partialShape({
 				name: ow.string.not.empty,
 				type: ow.string.oneOf(['text', 'number']),
 				required: ow.optional.boolean,
 				isOption: ow.optional.boolean,
 			}),
-		]),
-		flags: ow.array.exactShape([ow.string]),
+		),
+		flags: ow.array.ofType(ow.string),
 	}));
 	const ins = new Instance(props);
 
