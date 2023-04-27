@@ -16,7 +16,7 @@ export type CommandProps = {
 	description: string;
 	aliases: string[];
 	flags: string[];
-	args: Arg[];
+	args: Arg[] | Arg;
 	category: string;
 	editable?: boolean;
 };

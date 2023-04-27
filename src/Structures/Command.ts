@@ -1,4 +1,4 @@
-import {type CommandProps} from '@typings/command.js';
+import {type Arg, type CommandProps} from '@typings/command.js';
 import {type MessageEvent} from './Message.js';
 import {type TelegramFramework} from '@frameworks/GramJs.js';
 import {ArgumentException} from '@exceptions/ArgumentException.js';
@@ -10,6 +10,14 @@ export class Command {
      * @param props Command properties
      */
 	constructor(public readonly props: CommandProps) {}
+
+	public getArgument(key: string): Arg | undefined {
+		if (Array.isArray(this.props.args)) {
+			return this.props.args.find(arg => arg.name === key.toLowerCase());
+		}
+
+		return this.props.args;
+	}
 
 	async handle(event: MessageEvent): Promise<void> {
 		await event.reply('Hello World!');
@@ -23,7 +31,9 @@ export class Command {
 	}
 
 	protected processArg(event: MessageEvent) {
-		const copiedArgs = Array.from(this.props.args);
+		const copiedArgs = Array.from(
+			Array.isArray(this.props.args) ? this.props.args : [this.props.args],
+		);
 		const rawArgs = Array.from(event.args);
 
 		copiedArgs.forEach((arg, index) => {
@@ -43,7 +53,8 @@ export class Command {
 				Reflect.set(this.props.args, index, arg);
 				Reflect.deleteProperty(copiedArgs, index);
 			} else {
-				Reflect.set(arg, 'value', rawArgs.shift());
+				Reflect.set(arg, 'value', Array.isArray(this.props.args) ? rawArgs.shift()
+					: rawArgs.join(' '));
 
 				if (!arg.value?.length) {
 					const exception = new ArgumentException(arg);

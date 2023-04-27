@@ -7,6 +7,7 @@ import {TelegramClient} from 'telegram';
 import {type UserAuthParams} from 'telegram/client/auth.js';
 import {StringSession} from 'telegram/sessions/StringSession.js';
 
+import coreSearchCommand from '@commands/Core/Search.js';
 import utilPingCommand from '@commands/Utilities/Ping.js';
 import utilStartCommand from '@commands/Utilities/Start.js';
 
@@ -44,5 +45,7 @@ export class TelegramFramework extends TelegramClient {
 	protected registerCommands(): void {
 		utilPingCommand(this);
 		utilStartCommand(this);
+
+		coreSearchCommand(this);
 	}
 }

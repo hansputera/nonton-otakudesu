@@ -31,19 +31,29 @@ export const getVarsFromObject = <T extends Record<string, unknown>>(
 	return result;
 };
 
+export const chunk = <T>(arr: T[], size: number): T[][] =>
+	Array.from({length: Math.ceil(arr.length / size)}, (_, i: number) =>
+		arr.slice(i * size, (i * size) + size),
+	);
+
 export const registerCommand: RegisterCommandFn = (Instance, props) => {
 	ow(props, ow.object.exactShape({
 		name: ow.string.not.empty,
 		description: ow.string.not.empty.minLength(10),
 		aliases: ow.array.ofType(ow.string),
-		args: ow.array.ofType(
+		args: ow.any(ow.array.ofType(
 			ow.object.partialShape({
 				name: ow.string.not.empty,
 				type: ow.string.oneOf(['text', 'number']),
 				required: ow.optional.boolean,
 				isOption: ow.optional.boolean,
 			}),
-		),
+		), ow.object.partialShape({
+			name: ow.string.not.empty,
+			type: ow.string.oneOf(['text', 'number']),
+			required: ow.optional.boolean,
+			isOption: ow.optional.boolean,
+		})),
 		flags: ow.array.ofType(ow.string),
 		category: ow.string,
 		editable: ow.optional.boolean,
