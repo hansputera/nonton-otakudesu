@@ -18,7 +18,9 @@
             "@handlers/*": ["src/Handlers/*"],
             "@structures/*": ["src/Structures/*"],
             "@commands/*": ["src/Commands/*"],
-            "@exceptions/*": ["src/Exceptions/*"]
+            "@exceptions/*": ["src/Exceptions/*"],
+            "@middlewares/*": ["src/Middlewares/*"],
+            "@consumables/*": ["src/Consumable/*"]
         },
         "moduleResolution": "nodenext"
     },
