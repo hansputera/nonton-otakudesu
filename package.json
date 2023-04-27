@@ -20,6 +20,7 @@
   "type": "module",
   "dependencies": {
     "dotenv": "^16.0.3",
+    "odesus": "^1.2.1",
     "ow": "^1.1.1",
     "quick-lru": "^6.1.1",
     "telegram": "^2.16.4"
