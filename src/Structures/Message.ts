@@ -4,6 +4,7 @@ import {type NewMessageEvent} from 'telegram/events/NewMessage.js';
 
 import {Api} from 'telegram/tl/api.js';
 import {type Command} from './Command.js';
+import {type EditMessageParams, type SendMessageParams} from 'telegram/client/messages.js';
 
 export class MessageEvent {
 	constructor(
@@ -21,7 +22,7 @@ export class MessageEvent {
 			.slice(1);
 	}
 
-	public async reply(text: string): Promise<void> {
+	public async reply(text: string, params?: SendMessageParams | EditMessageParams): Promise<void> {
 		const oldRepliedMessage = this.cached;
 
 		if (oldRepliedMessage) {
@@ -30,11 +31,13 @@ export class MessageEvent {
 			}
 
 			await this.$client.editMessage(oldRepliedMessage.chat, {
+				...params as EditMessageParams,
 				message: parseInt(oldRepliedMessage.lastResponseMessageId, 10),
 				text,
 			});
 		} else {
 			const message = await this.$client.sendMessage(this.$ev.chatId!, {
+				...params as SendMessageParams,
 				message: text,
 				replyTo: this.$ev.message.id,
 			});
