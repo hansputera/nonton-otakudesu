@@ -6,7 +6,6 @@ export const assertEnv = (env: NodeJS.ProcessEnv): void => {
 		apiId: ow.string.numeric,
 		apiHash: ow.string.not.numeric,
 		botToken: ow.string.not.empty,
-		redisUri: ow.string,
 		mysqlUri: ow.string,
 	})));
 };
