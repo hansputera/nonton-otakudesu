@@ -3,6 +3,7 @@ import {type MessageOnCache} from '@typings/message.js';
 import {type NewMessageEvent} from 'telegram/events/NewMessage.js';
 
 import {Api} from 'telegram/tl/api.js';
+import {type Command} from './Command.js';
 
 export class MessageEvent {
 	constructor(
@@ -26,6 +27,16 @@ export class MessageEvent {
 
 	get cached(): MessageOnCache | undefined {
 		return this.$client.messages.get(this.$ev.message.id.toString());
+	}
+
+	get command(): Command | undefined {
+		const cmdName = this.getCommandName()?.toLowerCase();
+		if (!cmdName) {
+			return undefined;
+		}
+
+		return [...this.$client.commands.entriesAscending()]
+			.find(([name, cmd]) => cmdName === name || cmd.props.aliases.includes(cmdName))?.[1];
 	}
 
 	get entities() {
