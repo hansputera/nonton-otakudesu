@@ -67,4 +67,13 @@ export class MessageEvent {
 	get entities() {
 		return this.$ev.message.entities;
 	}
+
+	async _process(): Promise<void> {
+		const {command} = this;
+		if (!command) {
+			return;
+		}
+
+		await command._init(this);
+	}
 }
