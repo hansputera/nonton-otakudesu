@@ -42,6 +42,10 @@ export class MessageEvent {
 				replyTo: this.$ev.message.id,
 			});
 
+			if (this.command && !this.command.props.editable) {
+				return;
+			}
+
 			const peer = await this.$client.getInputEntity(this.$ev.chatId!);
 			this.$ev._chatPeer = peer;
 			this.$client.messages.set(this.$ev.message.id.toString(), {
