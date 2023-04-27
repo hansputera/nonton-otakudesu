@@ -8,6 +8,7 @@ import {type UserAuthParams} from 'telegram/client/auth.js';
 import {StringSession} from 'telegram/sessions/StringSession.js';
 
 import utilPingCommand from '@commands/Utilities/Ping.js';
+import utilStartCommand from '@commands/Utilities/Start.js';
 
 export class TelegramFramework extends TelegramClient {
 	public messages = new QuickLRU<string, MessageOnCache>({
@@ -42,5 +43,6 @@ export class TelegramFramework extends TelegramClient {
 
 	protected registerCommands(): void {
 		utilPingCommand(this);
+		utilStartCommand(this);
 	}
 }
