@@ -4,9 +4,7 @@ import {registerCommand} from '@utilities/object.js';
 
 class PingCommand extends Command {
 	async handle(event: MessageEvent): Promise<void> {
-		await this.client.sendMessage(event.$ev.chat!, {
-			message: `Pong! (unix: ${Date.now().toString()})`,
-		});
+		await event.reply(`Pong! (unix: ${Date.now().toString()})`);
 	}
 }
 

@@ -11,7 +11,7 @@ export class Command {
 	constructor(public readonly props: CommandProps) {}
 
 	async handle(event: MessageEvent): Promise<void> {
-		await this.client.sendMessage(event.$ev.chat!, {
+		await this.client.sendMessage(event.$ev.chatId!, {
 			message: 'Hello World!',
 		});
 	}

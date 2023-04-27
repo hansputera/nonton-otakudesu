@@ -34,13 +34,15 @@ export class MessageEvent {
 				text,
 			});
 		} else {
-			const message = await this.$client.sendMessage(this.$ev.chat!, {
+			const message = await this.$client.sendMessage(this.$ev.chatId!, {
 				message: text,
 				replyTo: this.$ev.message.id,
 			});
 
+			const peer = await this.$client.getInputEntity(this.$ev.chatId!);
+			this.$ev._chatPeer = peer;
 			this.$client.messages.set(this.$ev.message.id.toString(), {
-				chat: message.chat!,
+				chat: peer,
 				lastResponseMessageId: message.id.toString(),
 			});
 		}
