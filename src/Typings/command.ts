@@ -18,6 +18,7 @@ export type CommandProps = {
 	flags: string[];
 	args: Arg[];
 	category: string;
+	editable?: boolean;
 };
 
 export type RegisterCommandFn = <T extends typeof Command>(instance: T, props: CommandProps) => (
