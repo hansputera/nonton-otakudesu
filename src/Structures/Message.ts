@@ -1,6 +1,7 @@
 import {type TelegramFramework} from '@frameworks/GramJs.js';
 import {type MessageOnCache} from '@typings/message.js';
 import {type NewMessageEvent} from 'telegram/events/NewMessage.js';
+import {DeletedMessageEvent} from 'telegram/events/DeletedMessage.js';
 
 import {Api} from 'telegram/tl/api.js';
 import {type Command} from './Command.js';
@@ -8,7 +9,7 @@ import {type EditMessageParams, type SendMessageParams} from 'telegram/client/me
 
 export class MessageEvent {
 	constructor(
-		public readonly $ev: NewMessageEvent,
+		public readonly $ev: NewMessageEvent | DeletedMessageEvent,
 		public readonly $client: TelegramFramework,
 	) {}
 
@@ -23,6 +24,10 @@ export class MessageEvent {
 	}
 
 	public async reply(text: string, params?: SendMessageParams | EditMessageParams): Promise<void> {
+		if (this.$ev instanceof DeletedMessageEvent) {
+			return;
+		}
+
 		const oldRepliedMessage = this.cached;
 
 		if (oldRepliedMessage) {
@@ -56,11 +61,17 @@ export class MessageEvent {
 	}
 
 	get text(): string {
+		if (this.$ev instanceof DeletedMessageEvent) {
+			return '';
+		}
+
 		return this.$ev.message.message;
 	}
 
 	get cached(): MessageOnCache | undefined {
-		return this.$client.messages.get(this.$ev.message.id.toString());
+		return this.$client.messages.get(
+			this.$ev instanceof DeletedMessageEvent ? this.$ev.deletedIds[0].toString()
+				: this.$ev.message.id.toString());
 	}
 
 	get command(): Command | undefined {
@@ -74,6 +85,10 @@ export class MessageEvent {
 	}
 
 	get entities() {
+		if (this.$ev instanceof DeletedMessageEvent) {
+			return undefined;
+		}
+
 		return this.$ev.message.entities;
 	}
 
