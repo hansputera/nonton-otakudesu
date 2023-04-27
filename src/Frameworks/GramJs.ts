@@ -5,7 +5,7 @@ import QuickLRU from 'quick-lru';
 
 import {TelegramClient} from 'telegram';
 import {type UserAuthParams} from 'telegram/client/auth.js';
-import {StringSession} from 'telegram/sessions/StringSession.js';
+import {StoreSession} from 'telegram/sessions/StoreSession.js';
 
 import coreSearchCommand from '@commands/Core/Search.js';
 import utilPingCommand from '@commands/Utilities/Ping.js';
@@ -23,9 +23,10 @@ export class TelegramFramework extends TelegramClient {
 
 	/**
      * @param props TelegramFramework init props
+	 * @param session GramJS Session
      */
-	constructor(private readonly props: GramProps) {
-		super(new StringSession(''), parseInt(props.API_ID, 10), props.API_HASH, {
+	constructor(private readonly props: GramProps, public readonly session = new StoreSession('.session')) {
+		super(session, parseInt(props.API_ID, 10), props.API_HASH, {
 			connectionRetries: 5,
 			deviceModel: 'UtekeeDesuNee',
 			langCode: 'id',

@@ -26,7 +26,13 @@ export class Command {
 	async _init(event: MessageEvent): Promise<void> {
 		this.client = event.$client;
 
-		this.processArg(event);
+		try {
+			this.processArg(event);
+		} catch (e) {
+			await event.reply('An error occured while process this command:\n' + (e as Error).message);
+			return;
+		}
+
 		return this.handle(event);
 	}
 
@@ -41,10 +47,10 @@ export class Command {
 				const optionValue = event.getArgOption(arg.name);
 				if (!optionValue?.length) {
 					const exception = new ArgumentException(arg);
-					throw exception;
+					throw exception.required();
 				} else if (isNaN(parseInt(optionValue, 10)) && arg.type === 'number') {
 					const exception = new ArgumentException(arg);
-					throw exception;
+					throw exception.invalid('the value isn\'t a number');
 				}
 
 				Reflect.set(arg, 'value', arg.type === 'number' ? parseInt(
@@ -58,10 +64,10 @@ export class Command {
 
 				if (!arg.value?.length) {
 					const exception = new ArgumentException(arg);
-					throw exception;
+					throw exception.required();
 				} else if (isNaN(parseInt(arg.value, 10)) && arg.type === 'number') {
 					const exception = new ArgumentException(arg);
-					throw exception;
+					throw exception.invalid('the value isn\'t a number');
 				}
 
 				Reflect.set(this.props.args, index, arg);

@@ -6,6 +6,8 @@ export class ArgumentException extends Error {
      */
 	constructor(private readonly arg: Arg) {
 		super('');
+
+		this.name = 'ArgumentException';
 	}
 
 	required(): this {

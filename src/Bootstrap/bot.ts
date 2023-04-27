@@ -27,6 +27,8 @@ async function bootBotCall() {
 			console.log('Error: ', err.message);
 		},
 	});
+
+	client.session.save();
 }
 
 void bootBotCall();

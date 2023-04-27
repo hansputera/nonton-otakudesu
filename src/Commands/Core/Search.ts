@@ -1,8 +1,9 @@
+import {brotliCompressSync} from 'node:zlib';
 import {Odesus} from 'odesus';
+import {Api} from 'telegram';
 import {Command} from '@structures/Command.js';
 import {type MessageEvent} from '@structures/Message.js';
 import {chunk, registerCommand} from '@utilities/object.js';
-import {Api} from 'telegram';
 
 export class SearchCommand extends Command {
 	async handle(event: MessageEvent): Promise<void> {
@@ -20,19 +21,17 @@ export class SearchCommand extends Command {
 		}
 
 		const buttonsChunked = chunk(results.map((val, index) => new Api.KeyboardButtonCallback({
-			text: index.toString(),
-			data: Buffer.from(val.url, 'utf8'),
-		})), 3).map(b => new Api.KeyboardButtonRow({
-			buttons: b,
-		}));
+			text: (index + 1).toString(),
+			data: brotliCompressSync(Buffer.from(val.url, 'utf8'), {
+				chunkSize: 64,
+			}),
+		})), 5);
 
 		await event.reply(`**Lists:**\n${results.map(
 			(value, index) => `${index + 1}. ${value.name}`,
 		).join('\n')}`, {
-			parseMode: 'Markdown',
-			buttons: new Api.ReplyKeyboardMarkup({
-				rows: buttonsChunked,
-			}),
+			parseMode: 'markdown',
+			buttons: buttonsChunked,
 		});
 	}
 }
