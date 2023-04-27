@@ -4,11 +4,11 @@ import {type NewMessageEvent} from 'telegram/events/NewMessage.js';
 
 export class MessageEvent {
 	constructor(
-		public readonly event: NewMessageEvent,
+		public readonly $ev: NewMessageEvent,
 		public readonly $client: TelegramFramework,
 	) {}
 
 	get cached(): MessageOnCache | undefined {
-		return this.$client.messages.get(this.event.message.id.toString());
+		return this.$client.messages.get(this.$ev.message.id.toString());
 	}
 }

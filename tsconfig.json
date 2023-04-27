@@ -16,7 +16,8 @@
             "@boot/*": ["src/Bootstrap/*"],
             "@frameworks/*": ["src/Frameworks/*"],
             "@handlers/*": ["src/Handlers/*"],
-            "@structures/*": ["src/Structures/*"]
+            "@structures/*": ["src/Structures/*"],
+            "@commands/*": ["src/Commands/*"],
         },
         "moduleResolution": "nodenext"
     },

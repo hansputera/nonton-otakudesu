@@ -1,3 +1,5 @@
+import {type RegisterCommandFn} from '@typings/command.js';
+import ow from 'ow';
 import {camelToSnakeCase} from './words.js';
 
 export const camelToSnakeCaseKey = <T extends Record<string, unknown>>(object: T): T => {
@@ -27,4 +29,26 @@ export const getVarsFromObject = <T extends Record<string, unknown>>(
 	}
 
 	return result;
+};
+
+export const registerCommand: RegisterCommandFn = (Instance, props) => {
+	ow(props, ow.object.exactShape({
+		name: ow.string.not.empty,
+		description: ow.string.not.empty.minLength(10),
+		aliases: ow.array.exactShape([ow.string.not.empty]),
+		args: ow.array.exactShape([
+			ow.object.partialShape({
+				name: ow.string.not.empty,
+				type: ow.string.oneOf(['text', 'number']),
+				required: ow.optional.boolean,
+				isOption: ow.optional.boolean,
+			}),
+		]),
+		flags: ow.array.exactShape([ow.string]),
+	}));
+	const ins = new Instance(props);
+
+	return client => {
+		client.commands.set(props.name, ins);
+	};
 };
