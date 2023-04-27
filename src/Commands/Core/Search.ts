@@ -1,5 +1,5 @@
-import {brotliCompressSync} from 'node:zlib';
-import {Odesus} from 'odesus';
+import {brotliCompressSync, constants} from 'node:zlib';
+import {Odesus, Util} from 'odesus';
 import {Api} from 'telegram';
 import {Command} from '@structures/Command.js';
 import {type MessageEvent} from '@structures/Message.js';
@@ -20,11 +20,15 @@ export class SearchCommand extends Command {
 			return;
 		}
 
+		const slug2buff = (url: string): Buffer => {
+			const resolved = Util.resolveSlug(url);
+
+			return Buffer.from(`${resolved!.type}/${resolved!.slug}`, 'utf8');
+		};
+
 		const buttonsChunked = chunk(results.map((val, index) => new Api.KeyboardButtonCallback({
 			text: (index + 1).toString(),
-			data: brotliCompressSync(Buffer.from(val.url, 'utf8'), {
-				chunkSize: 64,
-			}),
+			data: slug2buff(val.url),
 		})), 5);
 
 		await event.reply(`**Lists:**\n${results.map(

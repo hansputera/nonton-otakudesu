@@ -1,7 +1,8 @@
 import {type TelegramFramework} from '@frameworks/GramJs.js';
 import {type MessageOnCache} from '@typings/message.js';
-import {type NewMessageEvent} from 'telegram/events/NewMessage.js';
+import {NewMessageEvent} from 'telegram/events/NewMessage.js';
 import {DeletedMessageEvent} from 'telegram/events/DeletedMessage.js';
+import {CallbackQueryEvent} from 'telegram/events/CallbackQuery.js';
 
 import {Api} from 'telegram/tl/api.js';
 import {type Command} from './Command.js';
@@ -9,7 +10,7 @@ import {type EditMessageParams, type SendMessageParams} from 'telegram/client/me
 
 export class MessageEvent {
 	constructor(
-		public readonly $ev: NewMessageEvent | DeletedMessageEvent,
+		public readonly $ev: NewMessageEvent | DeletedMessageEvent | CallbackQueryEvent,
 		public readonly $client: TelegramFramework,
 	) {}
 
@@ -50,7 +51,7 @@ export class MessageEvent {
 			const message = await this.$client.sendMessage(this.$ev.chatId!, {
 				...params as SendMessageParams,
 				message: text,
-				replyTo: this.$ev.message.id,
+				replyTo: this.messageId,
 			});
 
 			if (this.command && !this.command.props.editable) {
@@ -59,15 +60,27 @@ export class MessageEvent {
 
 			const peer = await this.$client.getInputEntity(this.$ev.chatId!);
 			this.$ev._chatPeer = peer;
-			this.$client.messages.set(this.$ev.message.id.toString(), {
+			this.$client.messages.set(this.messageId.toString(), {
 				chat: peer,
 				lastResponseMessageId: message.id.toString(),
 			});
 		}
 	}
 
+	get userId(): bigInt.BigInteger | undefined {
+		if (this.$ev instanceof NewMessageEvent) {
+			return this.$ev.message.sender?.id;
+		}
+
+		if (this.$ev instanceof CallbackQueryEvent) {
+			return this.$ev.sender?.id;
+		}
+
+		return undefined;
+	}
+
 	get text(): string {
-		if (this.$ev instanceof DeletedMessageEvent) {
+		if (!(this.$ev instanceof NewMessageEvent)) {
 			return '';
 		}
 
@@ -82,10 +95,20 @@ export class MessageEvent {
 		return this._args.filter(x => x.startsWith('--'));
 	}
 
+	get messageId(): number {
+		if (this.$ev instanceof DeletedMessageEvent) {
+			return this.$ev.deletedIds[0];
+		}
+
+		if (this.$ev instanceof CallbackQueryEvent) {
+			return this.$ev.messageId;
+		}
+
+		return this.$ev.message.id;
+	}
+
 	get cached(): MessageOnCache | undefined {
-		return this.$client.messages.get(
-			this.$ev instanceof DeletedMessageEvent ? this.$ev.deletedIds[0].toString()
-				: this.$ev.message.id.toString());
+		return this.$client.messages.get(this.messageId.toString());
 	}
 
 	get command(): Command | undefined {
@@ -99,7 +122,7 @@ export class MessageEvent {
 	}
 
 	get entities() {
-		if (this.$ev instanceof DeletedMessageEvent) {
+		if (!(this.$ev instanceof NewMessageEvent)) {
 			return undefined;
 		}
 
