@@ -19,7 +19,7 @@ export class MessageEvent {
 		}
 
 		return this.text.substring(command.offset, command.length)
-			.slice(1);
+			.slice(1).replace(/@.+/g, '');
 	}
 
 	public async reply(text: string, params?: SendMessageParams | EditMessageParams): Promise<void> {
