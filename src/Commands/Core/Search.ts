@@ -1,4 +1,3 @@
-import {brotliCompressSync, constants} from 'node:zlib';
 import {Odesus, Util} from 'odesus';
 import {Api} from 'telegram';
 import {Command} from '@structures/Command.js';
