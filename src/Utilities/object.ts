@@ -36,6 +36,21 @@ export const chunk = <T>(arr: T[], size: number): T[][] =>
 		arr.slice(i * size, (i * size) + size),
 	);
 
+export const dechunk = <T>(data: T[][]): T[] => {
+	const newData: T[] = Array.from<T>([]);
+	data.forEach((item, index) => {
+		if (Array.isArray(item)) {
+			newData.push(...item);
+		} else {
+			newData.push(item);
+		}
+
+		Reflect.deleteProperty(data, index);
+	});
+
+	return newData;
+};
+
 export const registerCommand: RegisterCommandFn = (Instance, props) => {
 	ow(props, ow.object.exactShape({
 		name: ow.string.not.empty,

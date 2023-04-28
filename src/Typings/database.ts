@@ -1,9 +1,8 @@
-import {ButtonEntity} from '@entities/Button.js';
-import {FileEntity} from '@entities/File.js';
+import {type ButtonEntity} from '@entities/Button.js';
+import {type FileEntity} from '@entities/File.js';
+import {type Repository} from 'typeorm';
 
-export const repositories = {
-	file: FileEntity,
-	button: ButtonEntity,
+export type RepositoriesType = {
+	file: Repository<FileEntity>;
+	button: Repository<ButtonEntity>;
 };
-
-export type RepositoriesType = typeof repositories;

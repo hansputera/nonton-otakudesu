@@ -17,9 +17,6 @@ export class ButtonEntity {
 	@Column()
 		key!: string;
 
-	@Column()
-		state!: string;
-
-	@Column()
-		value!: string;
+	@Column({type: 'blob'})
+		value!: Buffer;
 }

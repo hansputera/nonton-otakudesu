@@ -7,4 +7,5 @@ export const typeormDataSource = new DataSource({
 	url: process.env.MYSQL_URI,
 	synchronize: true,
 	entities: [FileEntity, ButtonEntity],
+	cache: true,
 });

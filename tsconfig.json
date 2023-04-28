@@ -22,7 +22,8 @@
             "@middlewares/*": ["src/Middlewares/*"],
             "@consumables/*": ["src/Consumable/*"],
             "@database/*": ["src/Database/*"],
-            "@entities/*": ["src/Database/Entities/*"]
+            "@entities/*": ["src/Database/Entities/*"],
+            "@services/*": ["src/Services/*"]
         },
         "moduleResolution": "nodenext",
         "experimentalDecorators": true,

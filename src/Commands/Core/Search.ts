@@ -1,8 +1,9 @@
-import {Odesus, Util} from 'odesus';
-import {Api} from 'telegram';
+import {Odesus} from 'odesus';
 import {Command} from '@structures/Command.js';
 import {type MessageEvent} from '@structures/Message.js';
-import {chunk, registerCommand} from '@utilities/object.js';
+import {registerCommand} from '@utilities/object.js';
+import {buildButtons} from '@services/Internal/make-buttons.js';
+import {$saveButtons} from '@services/Internal/save-buttons.js';
 
 export class SearchCommand extends Command {
 	async handle(event: MessageEvent): Promise<void> {
@@ -19,22 +20,19 @@ export class SearchCommand extends Command {
 			return;
 		}
 
-		const slug2buff = (url: string): Buffer => {
-			const resolved = Util.resolveSlug(url);
+		const prebuiltButtons = buildButtons(results.map((r, index) => ({
+			userId: event.userId!,
+			chatId: event.$ev.chat!.id,
+			buttonValue: (index + 1).toString(),
+			data: Buffer.from(`info:${r.url}`),
+		})));
 
-			return Buffer.from(`${resolved!.type}/${resolved!.slug}`, 'utf8');
-		};
-
-		const buttonsChunked = chunk(results.map((val, index) => new Api.KeyboardButtonCallback({
-			text: (index + 1).toString(),
-			data: slug2buff(val.url),
-		})), 5);
-
+		await $saveButtons(prebuiltButtons.toPreProcess());
 		await event.reply(`**Lists:**\n${results.map(
 			(value, index) => `${index + 1}. ${value.name}`,
 		).join('\n')}`, {
 			parseMode: 'markdown',
-			buttons: buttonsChunked,
+			buttons: prebuiltButtons.toTelegram(),
 		});
 	}
 }
