@@ -1,5 +1,5 @@
 /* eslint-disable new-cap */
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn} from 'typeorm';
 
 @Entity({
 	name: 'files',
@@ -19,4 +19,7 @@ export class FileEntity {
 
 	@Column({type: 'int'})
 		episode!: number;
+
+	@CreateDateColumn()
+		createdAt!: Date;
 }

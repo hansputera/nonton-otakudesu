@@ -17,6 +17,8 @@ export const $saveButtons = async (buttons: PreProcessButton[] | PreProcessButto
 		value: btn.value,
 		chatId: btn.props.chatId.toJSNumber(),
 		userId: btn.props.userId.toJSNumber(),
+		messageId: btn.props.messageId,
+		expireAt: new Date(Date.now() + (60_000 * 5)),
 	})));
 
 	return true;

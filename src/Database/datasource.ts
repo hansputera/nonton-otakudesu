@@ -8,4 +8,5 @@ export const typeormDataSource = new DataSource({
 	synchronize: true,
 	entities: [FileEntity, ButtonEntity],
 	cache: true,
+	logger: 'simple-console',
 });

@@ -22,9 +22,10 @@ export class SearchCommand extends Command {
 
 		const prebuiltButtons = buildButtons(results.map((r, index) => ({
 			userId: event.userId!,
-			chatId: event.$ev.chat!.id,
+			chatId: event.$ev.chatId!,
+			messageId: event.messageId,
 			buttonValue: (index + 1).toString(),
-			data: Buffer.from(`info:${r.url}`),
+			data: Buffer.from(`info;${r.url}`),
 		})));
 
 		await $saveButtons(prebuiltButtons.toPreProcess());

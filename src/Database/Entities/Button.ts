@@ -17,6 +17,12 @@ export class ButtonEntity {
 	@Column()
 		key!: string;
 
+	@Column({nullable: true, type: 'bigint'})
+		messageId?: number;
+
 	@Column({type: 'blob'})
 		value!: Buffer;
+
+	@Column({type: 'datetime'})
+		expireAt!: Date;
 }
