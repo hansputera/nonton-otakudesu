@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prepare": "node prepare.js",
-    "build": "tsup"
+    "build": "tsup",
+    "hook:sync": "node sync_hook.js --max-old-space-size=100"
   },
   "keywords": [
     "weeb",
@@ -34,6 +35,7 @@
     "eslint-config-xo-typescript": "^0.57.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
+    "is-git-dirty": "^2.0.2",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   }
