@@ -17,6 +17,6 @@ export class FileEntity {
 	@Column()
 		name!: string;
 
-	@Column({type: 'number'})
+	@Column({type: 'int'})
 		episode!: number;
 }
