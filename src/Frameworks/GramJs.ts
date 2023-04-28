@@ -3,7 +3,7 @@ import {type GramProps} from '@typings/frameworks.gramjs.js';
 import {type MessageOnCache} from '@typings/message.js';
 import QuickLRU from 'quick-lru';
 
-import {TelegramClient} from 'telegram';
+import {Api, TelegramClient} from 'telegram';
 import {type UserAuthParams} from 'telegram/client/auth.js';
 import {StoreSession} from 'telegram/sessions/StoreSession.js';
 
@@ -41,6 +41,20 @@ export class TelegramFramework extends TelegramClient {
 			...params,
 			botAuthToken: this.props.BOT_TOKEN,
 		});
+	}
+
+	public async sendInline(
+		queryId: bigInt.BigInteger,
+		data: Api.TypeInputBotInlineResult[],
+		cacheTime = 30,
+		props?: {private?: boolean},
+	) {
+		await this.invoke(new Api.messages.SetInlineBotResults({
+			queryId,
+			cacheTime,
+			results: data,
+			private: props?.private,
+		}));
 	}
 
 	protected registerCommands(): void {
