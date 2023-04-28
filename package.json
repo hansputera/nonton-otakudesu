@@ -21,10 +21,13 @@
   "type": "module",
   "dependencies": {
     "dotenv": "^16.0.3",
+    "mysql2": "^3.2.4",
     "odesus": "^1.2.1",
     "ow": "^1.1.1",
     "quick-lru": "^6.1.1",
-    "telegram": "^2.16.4"
+    "reflect-metadata": "^0.1.13",
+    "telegram": "^2.16.4",
+    "typeorm": "^0.3.15"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
