@@ -1,5 +1,5 @@
-const isCI = require('is-ci');
-const husky = require('husky');
+import isCI from 'is-ci';
+import husky from 'husky';
 
 if (!isCI) {
 	husky.install('.husky');

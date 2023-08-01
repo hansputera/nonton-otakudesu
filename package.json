@@ -7,7 +7,7 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prepare": "node prepare.js",
     "build": "tsup",
-    "hook:sync": "node sync_hook.js --max-old-space-size=100"
+    "hook:sync": "node sync_hook.js --max-old-space-~size=100"
   },
   "keywords": [
     "weeb",
