@@ -2,6 +2,7 @@ import {type ButtonEntity} from '@database/Entities/Button.js';
 import {type MessageEvent} from '@structures/Message.js';
 import {Odesus, Util} from 'odesus';
 import {Api} from 'telegram';
+import {CustomFile} from 'telegram/client/uploads.js';
 import {CallbackQueryEvent} from 'telegram/events/CallbackQuery.js';
 import {type Repository} from 'typeorm';
 
@@ -46,11 +47,18 @@ export const handlerInfoCallback = async (
 		responseType: 'arraybuffer',
 	});
 
+	const episodesText = anime.episodes
+		.filter(episode => /\/episode/gi.test(episode.url))
+		.reverse()
+		.slice(-5)
+		.map((episode, index) => `${index + 1}. ${episode.title} - (${episode.url})`)
+		.join('\n');
 	await event.$client.sendFile(event.$ev.chatId!, {
-		caption: 'Here is the list of episodes:',
-		file: Buffer.from(photoBuffer.data),
-		fileSize: photoBuffer.data.byteLength,
-		workers: 5,
+		caption: `Here is the list of 5 recent episodes:\n\n${episodesText}`,
+		file: await event.$client.uploadFile({
+			file: new CustomFile('photo.png', photoBuffer.data.byteLength, '', Buffer.from(photoBuffer.data)),
+			workers: 5,
+		}),
 	});
 
 	await repository.createQueryBuilder()
