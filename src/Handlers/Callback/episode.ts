@@ -8,8 +8,6 @@ import {returnBigInt} from 'telegram/Helpers.js';
 import {CustomFile} from 'telegram/client/uploads.js';
 import {CallbackQueryEvent} from 'telegram/events/CallbackQuery.js';
 
-// Fix: fix send previous video
-
 export const handlerEpisodeCallback = async (
 	event: MessageEvent,
 	url: string,
@@ -95,6 +93,11 @@ export const handlerEpisodeCallback = async (
 					duration: 25 * 60_000,
 					supportsStreaming: true,
 				})],
+				message: `${episode.title} video delivered, time: ${fileCheck.createdAt.toLocaleDateString('en-US', {
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric',
+				})}`,
 			});
 			return;
 		}
@@ -118,14 +121,19 @@ export const handlerEpisodeCallback = async (
 					duration: 25 * 60_000,
 					supportsStreaming: true,
 				})],
+				message: `${episode.title} video delivered, time: ${(new Date()).toLocaleDateString('en-US', {
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric',
+				})}`,
 			});
 
 			const uploadedMediaDoc = (m.media as Api.MessageMediaDocument)
 				.document as Api.Document;
 
 			const encodedFile = FileId.encodeFileId({
-				accessHash: BigInt(uploadedMediaDoc.accessHash.toJSNumber()),
-				id: BigInt(uploadedMediaDoc.id.toJSNumber()),
+				accessHash: BigInt(uploadedMediaDoc.accessHash.toString()),
+				id: BigInt(uploadedMediaDoc.id.toString()),
 				dcId: uploadedMediaDoc.dcId,
 				subVersion: 32,
 				version: 4,
