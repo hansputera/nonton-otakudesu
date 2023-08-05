@@ -78,7 +78,7 @@ export const handlerEpisodeCallback = async (
 			// 	replyToMsgId: event.$ev.messageId,
 			// }));
 
-			await previousMessage.delete();
+			await previousMessage.delete({revoke: true});
 			await event.$client.sendMessage(event.$ev.chatId!, {
 				file: new Api.InputMediaDocument({
 					id: new Api.InputDocument({
@@ -98,6 +98,8 @@ export const handlerEpisodeCallback = async (
 					day: 'numeric',
 					month: 'long',
 					year: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
 				})}`,
 				replyTo: previousMessage,
 			});
@@ -127,6 +129,8 @@ export const handlerEpisodeCallback = async (
 					day: 'numeric',
 					month: 'long',
 					year: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
 				})}`,
 				replyTo: previousMessage,
 			});
