@@ -20,10 +20,11 @@
             "@commands/*": ["src/Commands/*"],
             "@exceptions/*": ["src/Exceptions/*"],
             "@middlewares/*": ["src/Middlewares/*"],
-            "@consumables/*": ["src/Consumable/*"],
+            // "@consumables/*": ["src/Consumable/*"],
             "@database/*": ["src/Database/*"],
             "@entities/*": ["src/Database/Entities/*"],
-            "@services/*": ["src/Services/*"]
+            "@services/*": ["src/Services/*"],
+            "@config/*": ["src/Config/*"],
         },
         "moduleResolution": "nodenext",
         "experimentalDecorators": true,

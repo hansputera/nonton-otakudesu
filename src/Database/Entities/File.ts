@@ -8,17 +8,20 @@ export class FileEntity {
 	@PrimaryGeneratedColumn()
 		id!: number;
 
-	@Column({type: 'bigint'})
-		fileId!: number;
+	@Column({type: 'longtext'})
+		fileId!: string;
 
-	@Column({type: 'bigint'})
+	@Column({type: 'bigint', nullable: true})
 		chatId!: number;
 
 	@Column()
 		name!: string;
 
-	@Column({type: 'int'})
-		episode!: number;
+	// @Column({type: 'longtext', transformer: [{
+	// 	from: (value: string) => Buffer.from(value, 'base64'),
+	// 	to: (value: Buffer) => value.toString('base64'),
+	// }]})
+	// 	fileRef!: Buffer;
 
 	@CreateDateColumn()
 		createdAt!: Date;

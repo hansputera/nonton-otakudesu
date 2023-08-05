@@ -1,10 +1,13 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tgsnake/fileid':
+    specifier: ^2.1.0
+    version: 2.1.0
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -516,6 +519,11 @@ packages:
       '@swc/core-win32-ia32-msvc': 1.3.73
       '@swc/core-win32-x64-msvc': 1.3.73
     dev: true
+
+  /@tgsnake/fileid@2.1.0:
+    resolution: {integrity: sha512-WF9bem6DiMlmc9iqVIK+3Fvih0HrYHPQA/1/m3Oh9O6prY+G5UXEvSWWYn2Q7EXBHOGIJWjcWSM0eWvm1rgeTA==}
+    engines: {node: '>=10.0.0', npm: '>=6.0.0', yarn: '>=1.0.0'}
+    dev: false
 
   /@types/json-schema@7.0.12:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}

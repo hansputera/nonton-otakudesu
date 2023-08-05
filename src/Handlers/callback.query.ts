@@ -1,7 +1,9 @@
 import {getRepository} from '@database/repository.js';
 import {type MessageEvent} from '@structures/Message.js';
 import {CallbackQueryEvent} from 'telegram/events/CallbackQuery.js';
+
 import {handlerInfoCallback} from './Callback/info.js';
+import {handlerEpisodeCallback} from './Callback/episode.js';
 
 export const handlerCallbackQuery = async (event: MessageEvent) => {
 	if (event.$ev instanceof CallbackQueryEvent) {
@@ -36,17 +38,26 @@ export const handlerCallbackQuery = async (event: MessageEvent) => {
 			return;
 		}
 
+		if (record.userId !== event.$ev.query.userId.toJSNumber()) {
+			return;
+		}
+
 		const [state, url] = record.value.toString('utf8').split(';');
 		switch (state) {
 			case 'info':
 				await handlerInfoCallback(event, record, repository, url);
 				break;
+			case 'episode':
+				await handlerEpisodeCallback(event, url);
+				break;
 			default:
-				await repository.softRemove(record);
-				await event.$client.editMessage(event.$ev.chatId!, {
+				await repository.remove(record);
+				/** I don't need it anymore
+				 	await event.$client.editMessage(event.$ev.chatId!, {
 					message: event.messageId,
 					text: 'This message contains invalid data',
-				});
+				}); */
+				await event.$ev.delete({revoke: true});
 		}
 	}
 };

@@ -20,6 +20,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
+    "@tgsnake/fileid": "^2.1.0",
     "dotenv": "^16.3.1",
     "mysql2": "^3.5.2",
     "odesus": "^1.2.1",

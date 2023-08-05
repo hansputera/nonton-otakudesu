@@ -8,16 +8,25 @@ export class ButtonEntity {
 	@PrimaryGeneratedColumn()
 		id!: number;
 
-	@Column({type: 'bigint'})
+	@Column({type: 'bigint', transformer: [{
+		to: (value: number) => value,
+		from: (value: string) => parseInt(value, 10),
+	}]})
 		userId!: number;
 
-	@Column({type: 'bigint'})
+	@Column({type: 'bigint', transformer: [{
+		to: (value: number) => value,
+		from: (value: string) => parseInt(value, 10),
+	}]})
 		chatId!: number;
 
 	@Column()
 		key!: string;
 
-	@Column({nullable: true, type: 'bigint'})
+	@Column({nullable: true, type: 'bigint', transformer: [{
+		to: (value: number) => value,
+		from: (value: string) => parseInt(value || '0', 10),
+	}]})
 		messageId?: number;
 
 	@Column({type: 'blob'})
