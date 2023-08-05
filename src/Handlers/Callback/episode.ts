@@ -78,6 +78,7 @@ export const handlerEpisodeCallback = async (
 			// 	replyToMsgId: event.$ev.messageId,
 			// }));
 
+			await previousMessage.delete();
 			await event.$client.sendMessage(event.$ev.chatId!, {
 				file: new Api.InputMediaDocument({
 					id: new Api.InputDocument({
@@ -98,6 +99,7 @@ export const handlerEpisodeCallback = async (
 					month: 'long',
 					year: 'numeric',
 				})}`,
+				replyTo: previousMessage,
 			});
 			return;
 		}
@@ -126,6 +128,7 @@ export const handlerEpisodeCallback = async (
 					month: 'long',
 					year: 'numeric',
 				})}`,
+				replyTo: previousMessage,
 			});
 
 			const uploadedMediaDoc = (m.media as Api.MessageMediaDocument)
