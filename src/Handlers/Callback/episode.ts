@@ -44,18 +44,27 @@ export const handlerEpisodeCallback = async (
 		baseUrl: '',
 		responseType: 'arraybuffer',
 	});
+	const mirror = episode.mirrors[
+		Math.floor(Math.random() * episode.mirrors.length)
+	];
 
-	const streamUrl = await episode.getStreamUrl();
+	const streamUrl = await mirror.getStreamUrl().catch(e => (e as Error).message);
+	const isAvailable2Download = typeof streamUrl !== 'string';
+
 	await event.$client.sendFile(event.$ev.chatId!, {
-		caption: `<b>Judul:</b> <a href="${episode.url}">${episode.title}</a>\n\n<b>Available to download?:</b> ${streamUrl ? 'Yes' : 'Nope'}\n<b>Dipost oleh:</b> ${episode.postedBy}\n\n<b>Download links:</b>\n${episode.downloads.map((d, i) => `${i + 1}. ${d.resolution} (${d.size})\n${d.urls.map(u => `<a href="${u.url}">${u.source}</a>`).join(' | ')}`).join('\n')}`,
+		caption: `<b>Judul:</b> <a href="${episode.url}">${episode.title}</a>\n\n<b>Available to download?:</b> ${isAvailable2Download ? 'Yes' : 'Nope'}\n<b>Dipost oleh:</b> ${episode.postedBy}\n\n<b>Download links:</b>\n${episode.downloads.map((d, i) => `${i + 1}. ${d.resolution} (${d.size})\n${d.urls.map(u => `<a href="${u.url}">${u.source}</a>`).join(' | ')}`).join('\n')}`,
 		parseMode: 'html',
 		file: new CustomFile('photo.png', photoBuffer.data.byteLength, '', Buffer.from(photoBuffer.data)),
 	});
+	const previousMessage = await event.$client.sendMessage(event.$ev.chatId!, {
+		message: isAvailable2Download
+			? 'Downloading current episode in recommended resolution...'
+			: `Cannot download this episode because \`${streamUrl}\`\nDirect link: ${
+				await mirror.getMirrorUrl()
+			}`,
+	});
 
 	if (streamUrl?.length) {
-		const previousMessage = await event.$client.sendMessage(event.$ev.chatId!, {
-			message: 'Downloading current episode in recommended resolution...',
-		});
 		const fileCheck = await repository?.findOne({
 			where: {
 				name: episode.title,
@@ -106,14 +115,20 @@ export const handlerEpisodeCallback = async (
 			return;
 		}
 
-		let buffer = Buffer.alloc(0);
+		const stream = await mirror.stream().catch(e => (e as Error).message);
+		if (typeof stream === 'string') {
+			await previousMessage.edit({
+				text: `Error: **${stream}**\nDirect access: ${await mirror.getMirrorUrl()}`,
+			});
+			return;
+		}
 
-		const stream = await episode.stream();
+		let buffer = Buffer.alloc(0);
 		stream.on('data', (chunk: Buffer) => {
 			buffer = Buffer.concat([buffer, Buffer.from(chunk)]);
 		}).on('end', async () => {
 			await previousMessage.edit({
-				text: 'Video downloaded\nnow sending to telegram servers..',
+				text: `Video downloaded (${mirror.resolution} - ${mirror.source})\nnow sending to telegram servers..`,
 			});
 
 			const m = await event.$client.sendMessage(event.$ev.chatId!, {
