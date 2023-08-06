@@ -10,7 +10,8 @@ class SysInfoCommand extends Command {
 		const cpus = os.cpus();
 		const memuse = process.memoryUsage();
 
-		await event.reply(stripIndent(`**Server's resources:**
+		await event.reply(stripIndent(`
+		**Server's resources:**
             1. Memory/RAM: ${prettyBytes(os.totalmem() - os.freemem())} used of ${prettyBytes(os.totalmem())} (${
 	prettyBytes(os.freemem())
 } free)
