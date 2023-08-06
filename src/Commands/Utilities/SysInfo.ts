@@ -12,17 +12,17 @@ class SysInfoCommand extends Command {
 
 		await event.reply(stripIndent(`
 		**Server's resources:**
-            1. Memory/RAM: ${prettyBytes(os.totalmem() - os.freemem())} used of ${prettyBytes(os.totalmem())} (${
+        1. Memory/RAM: ${prettyBytes(os.totalmem() - os.freemem())} used of ${prettyBytes(os.totalmem())} (${
 	prettyBytes(os.freemem())
 } free)
-            2. CPU: ${cpus[0].model} (${cpus.length} core)
-            3. Platform, arch: ${os.type()} ${os.platform()}, ${os.arch()}
-            4. Kernel version: ${os.version()}
+        2. CPU: ${cpus[0].model} (${cpus.length} core)
+        3. Platform, arch: ${os.type()} ${os.platform()}, ${os.arch()}
+        4. Kernel version: ${os.version()}
         
-            **Program:**
-            1. Memory/RAM: ${prettyBytes(memuse.heapUsed)} used of ${prettyBytes(memuse.heapTotal)}
-            2. NodeJS version: ${process.version} (V8: ${process.versions.v8})
-        `));
+        **Program:**
+        1. Memory/RAM: ${prettyBytes(memuse.heapUsed)} used of ${prettyBytes(memuse.heapTotal)}
+        2. NodeJS version: ${process.version} (V8: ${process.versions.v8})
+    `));
 	}
 }
 
