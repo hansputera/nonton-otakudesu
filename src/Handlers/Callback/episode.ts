@@ -49,8 +49,8 @@ export const handlerEpisodeCallback = async (
 		Math.floor(Math.random() * episode.mirrors.length)
 	];
 
-	const streamUrl = await mirror.getStreamUrl().catch(e => (e as Error).message);
-	const isAvailable2Download = typeof streamUrl !== 'string';
+	const streamUrl = await mirror.getStreamUrl().catch(e => ({e: (e as Error).message}));
+	const isAvailable2Download = typeof streamUrl !== 'object';
 
 	await event.$client.sendFile(event.$ev.chatId!, {
 		caption: stripIndent(`
@@ -66,12 +66,12 @@ export const handlerEpisodeCallback = async (
 	const previousMessage = await event.$client.sendMessage(event.$ev.chatId!, {
 		message: isAvailable2Download
 			? 'Downloading current episode in recommended resolution...'
-			: `Cannot download this episode because \`${streamUrl}\`\nDirect link: ${
+			: `Cannot download this episode because \`${streamUrl.e}\`\nDirect link: ${
 				await mirror.getMirrorUrl()
 			}`,
 	});
 
-	if (streamUrl?.length) {
+	if (isAvailable2Download) {
 		const fileCheck = await repository?.findOne({
 			where: {
 				name: episode.title,
