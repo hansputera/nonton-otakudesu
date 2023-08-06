@@ -10,6 +10,7 @@ import {StoreSession} from 'telegram/sessions/StoreSession.js';
 import coreSearchCommand from '@commands/Core/Search.js';
 import utilPingCommand from '@commands/Utilities/Ping.js';
 import utilStartCommand from '@commands/Utilities/Start.js';
+import sysInfoCommand from '@commands/Utilities/SysInfo.js';
 
 export class TelegramFramework extends TelegramClient {
 	public messages = new QuickLRU<string, MessageOnCache>({
@@ -62,5 +63,6 @@ export class TelegramFramework extends TelegramClient {
 		utilStartCommand(this);
 
 		coreSearchCommand(this);
+		sysInfoCommand(this);
 	}
 }

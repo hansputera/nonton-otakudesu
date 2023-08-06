@@ -4,6 +4,7 @@ import {type MessageEvent} from '@structures/Message.js';
 import {Odesus, Util} from 'odesus';
 import {FileId, FileType} from '@tgsnake/fileid';
 import {Api} from 'telegram';
+import stripIndent from 'strip-indent';
 import {returnBigInt} from 'telegram/Helpers.js';
 import {CustomFile} from 'telegram/client/uploads.js';
 import {CallbackQueryEvent} from 'telegram/events/CallbackQuery.js';
@@ -52,7 +53,13 @@ export const handlerEpisodeCallback = async (
 	const isAvailable2Download = typeof streamUrl !== 'string';
 
 	await event.$client.sendFile(event.$ev.chatId!, {
-		caption: `<b>Judul:</b> <a href="${episode.url}">${episode.title}</a>\n\n<b>Available to download?:</b> ${isAvailable2Download ? 'Yes' : 'Nope'}\n<b>Dipost oleh:</b> ${episode.postedBy}\n\n<b>Download links:</b>\n${episode.downloads.map((d, i) => `${i + 1}. ${d.resolution} (${d.size})\n${d.urls.map(u => `<a href="${u.url}">${u.source}</a>`).join(' | ')}`).join('\n')}`,
+		caption: stripIndent(`
+			<b>Judul:</b> <a href="${episode.url}">${episode.title}</a>\n
+			<b>Available to download?:</b> ${isAvailable2Download ? 'Yes' : 'Nope'}\n
+			<b>Dipost oleh:</b> ${episode.postedBy}\n
+			<b>Download links:</b>\n
+			${episode.downloads.map((d, i) => `${i + 1}. ${d.resolution} (${d.size})\n${d.urls.map(u => `<a href="${u.url}">${u.source}</a>`).join(' | ')}`).join('\n')}`,
+		),
 		parseMode: 'html',
 		file: new CustomFile('photo.png', photoBuffer.data.byteLength, '', Buffer.from(photoBuffer.data)),
 	});
@@ -103,13 +110,15 @@ export const handlerEpisodeCallback = async (
 					duration: 25 * 60_000,
 					supportsStreaming: true,
 				})],
-				message: `${episode.title} video delivered, time: ${fileCheck.createdAt.toLocaleDateString('en-US', {
-					day: 'numeric',
-					month: 'long',
-					year: 'numeric',
-					hour: 'numeric',
-					minute: 'numeric',
-				})}`,
+				message: stripIndent(`
+				${episode.title} video delivered, time: ${
+	fileCheck.createdAt.toLocaleDateString('en-US', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+	})}`),
 				replyTo: previousMessage,
 			});
 			return;
@@ -118,7 +127,10 @@ export const handlerEpisodeCallback = async (
 		const stream = await mirror.stream().catch(e => (e as Error).message);
 		if (typeof stream === 'string') {
 			await previousMessage.edit({
-				text: `Error: **${stream}**\nDirect access: ${await mirror.getMirrorUrl()}`,
+				text: stripIndent(
+					`Error: **${stream}**
+					Direct access: ${await mirror.getMirrorUrl()}`,
+				),
 			});
 			return;
 		}
@@ -128,7 +140,10 @@ export const handlerEpisodeCallback = async (
 			buffer = Buffer.concat([buffer, Buffer.from(chunk)]);
 		}).on('end', async () => {
 			await previousMessage.edit({
-				text: `Video downloaded (${mirror.resolution} - ${mirror.source})\nnow sending to telegram servers..`,
+				text: stripIndent(`
+					Video downloaded (${mirror.resolution} - ${mirror.source})
+					now sending to telegram servers..`,
+				),
 			});
 
 			const m = await event.$client.sendMessage(event.$ev.chatId!, {
